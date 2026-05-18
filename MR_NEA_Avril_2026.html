@@ -1,0 +1,2289 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>MR NEA Madagascar — Performance & Pipeline · Avril 2026</title>
+<style>
+:root {
+  --navy: #131635;
+  --navy-soft: #1F2347;
+  --turquoise: #59BFC2;
+  --turquoise-deep: #4AA3A6;
+  --turquoise-soft: #E8F7F7;
+  --blue: #2A8DD8;
+  --orange: #F9A454;
+  --green: #90CB44;
+  --green-dark: #6BA532;
+  --green-soft: #EFF8E2;
+  --red: #C00000;
+  --bg: #F4F6FA;
+  --white: #FFFFFF;
+  --line: #E5E7EB;
+  --text-muted: #6B7280;
+  --text-dim: #9CA3AF;
+  --text: #1F2937;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { font-family: -apple-system, 'Segoe UI', Calibri, sans-serif; color: var(--text); background: var(--bg); font-size: 14px; }
+
+.app { display: grid; grid-template-columns: 230px 1fr; min-height: 100vh; }
+
+/* SIDEBAR navy */
+.sidebar { background: var(--navy); color: var(--white); padding: 22px 16px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; }
+.sb-brand { display: flex; align-items: center; gap: 10px; padding: 4px 4px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 18px; }
+.sb-brand .logo-mark { width: 36px; height: 36px; background: var(--turquoise); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.sb-brand .logo-mark svg { width: 22px; height: 22px; }
+.sb-brand .logo-text .logo-name { font-size: 14px; font-weight: 800; color: var(--white); letter-spacing: 0.5px; }
+.sb-brand .logo-text .logo-sub { font-size: 9px; color: var(--text-dim); margin-top: 1px; text-transform: uppercase; letter-spacing: 1.5px; }
+
+.sb-logo { padding: 8px 4px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 16px; }
+.sb-logo img { width: 100%; max-width: 180px; display: block; background: var(--white); border-radius: 8px; padding: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+.sb-context { font-size: 10px; color: var(--text-dim); padding: 0 6px 14px; line-height: 1.5; }
+.sb-context strong { color: var(--turquoise); font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; }
+.sb-section { font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; padding: 14px 6px 6px; font-weight: 700; }
+.sb-nav { display: flex; flex-direction: column; gap: 1px; }
+.sb-nav a { color: rgba(255,255,255,0.72); text-decoration: none; padding: 9px 12px; border-radius: 6px; font-size: 12.5px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: all 0.12s; }
+.sb-nav a:hover { background: rgba(255,255,255,0.05); color: var(--white); }
+.sb-nav a.active { background: var(--turquoise); color: var(--navy); font-weight: 700; }
+.sb-nav a .ico { width: 14px; height: 14px; opacity: 0.65; flex-shrink: 0; display: inline-block; }
+.sb-nav a.active .ico { opacity: 1; }
+
+.sb-foot { margin-top: auto; padding: 12px 4px 0; border-top: 1px solid rgba(255,255,255,0.08); font-size: 9px; color: var(--text-dim); line-height: 1.5; }
+.sb-foot strong { color: var(--turquoise); }
+
+/* MAIN content */
+.main { padding: 0; overflow-y: auto; }
+.topbar { background: var(--white); padding: 22px 32px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 5; }
+.topbar h1 { font-size: 20px; color: var(--navy); font-weight: 700; }
+.topbar .h-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.topbar .h-meta { display: flex; gap: 10px; align-items: center; }
+.topbar .h-badge { background: var(--navy); color: var(--white); padding: 6px 12px; border-radius: 999px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
+
+.section { padding: 24px 32px; display: none; }
+.section.active { display: block; }
+
+.s-title { font-size: 10px; color: var(--text-muted); letter-spacing: 2.5px; text-transform: uppercase; font-weight: 700; margin: 6px 0 14px; }
+
+/* ============ PERFORMANCE — DASHBOARD STYLE ============ */
+.perf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 22px; }
+.perf-card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 22px 24px;
+  border: 1px solid var(--line);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+.perf-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.perf-head .pc-name { font-size: 22px; color: var(--navy); font-weight: 800; letter-spacing: 0.3px; }
+.perf-head .pc-sub { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.2px; margin-top: 2px; font-weight: 600; }
+.perf-head .pc-badge { padding: 4px 10px; border-radius: 999px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.pc-badge.retard { background: #FEE2E2; color: #991B1B; }
+
+.tiles-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0 16px; }
+.tile { background: var(--bg); border-radius: 10px; padding: 14px 16px; border: 1px solid var(--line); }
+.tile-label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; margin-bottom: 8px; }
+.tile-main { display: flex; align-items: baseline; gap: 6px; }
+.tile-main .tm-num { font-size: 26px; color: var(--navy); font-weight: 800; line-height: 1; }
+.tile-main .tm-obj { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+.tile-sub { font-size: 10.5px; color: var(--text-muted); margin-top: 6px; }
+
+.prog-block { margin: 12px 0; }
+.prog-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; margin-bottom: 5px; color: var(--text-muted); }
+.prog-row strong { color: var(--navy); font-weight: 700; }
+.prog-bar { height: 7px; background: var(--line); border-radius: 4px; overflow: hidden; position: relative; }
+.prog-bar .fill { height: 100%; background: linear-gradient(to right, var(--red), var(--orange)); border-radius: 4px; }
+.prog-bar .marker { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--navy); }
+.prog-retard { font-size: 10.5px; color: var(--text-muted); text-align: right; margin-top: 4px; font-style: italic; }
+
+/* Affaires - tableaux en blocs avec header turquoise */
+.deals-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.deals-section { margin-top: 18px; }
+.deals-card {
+  background: var(--white);
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.dc-header {
+  padding: 11px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--white);
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.dc-header .dc-title { display: flex; align-items: center; gap: 8px; }
+.dc-header .dc-title .dc-check {
+  width: 16px; height: 16px;
+  background: rgba(255,255,255,0.22);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px;
+}
+.dc-header .dc-count {
+  font-size: 10.5px;
+  background: rgba(255,255,255,0.2);
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.deals-card.epc .dc-header { background: var(--turquoise); }
+.deals-card.epc.cours .dc-header { background: var(--turquoise-deep); }
+.deals-card.ppa .dc-header { background: var(--blue); }
+.deals-card.ppa.cours .dc-header { background: #1E40AF; }
+
+.deals-list .dl-head, .deals-list .dl-row, .deals-list .dl-total {
+  display: grid;
+  grid-template-columns: 1fr 60px 60px;
+  padding: 8px 16px;
+  font-size: 13px;
+  align-items: center;
+}
+.deals-list .dl-head { color: var(--text-dim); font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; }
+.deals-list .dl-row { border-bottom: 1px solid #F1F1F2; transition: background 0.1s; }
+.deals-list .dl-row:hover { background: #FAFBFC; }
+.deals-list .dl-row .dr-name { font-weight: 500; color: var(--navy); }
+.deals-list .dl-row.signed { background: #DCFCE7; }
+.deals-list .dl-row.signed .dr-name { font-weight: 700; color: #14532D; }
+.deals-list .dl-row.signed:hover { background: #BBF7D0; }
+.deals-list .dr-num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; color: var(--text); }
+.deals-list .dl-total { background: var(--navy); color: var(--white); font-weight: 700; font-size: 12px; letter-spacing: 0.5px; }
+.deals-list .dl-total .dr-num { color: var(--white); font-size: 13px; }
+
+.pill-signed {
+  display: inline-block; margin-left: 8px;
+  background: #16A34A; color: var(--white);
+  padding: 2px 7px; border-radius: 999px;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.5px; text-transform: uppercase;
+}
+
+/* ============ PIPELINE — TABLEAU DENSE EXCEL-STYLE ============ */
+.pipe-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px; }
+.pipe-stat {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+}
+.pipe-stat.featured { background: var(--navy); color: var(--white); border: none; }
+.pipe-stat.featured-turq { background: var(--turquoise); color: var(--white); border: none; }
+.ps-label { font-size: 9.5px; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.7; font-weight: 700; margin-bottom: 6px; }
+.ps-val { font-size: 26px; font-weight: 800; line-height: 1; }
+.ps-val .unit { font-size: 13px; opacity: 0.7; margin-left: 4px; font-weight: 500; }
+.ps-sub { font-size: 10.5px; margin-top: 7px; opacity: 0.75; line-height: 1.4; }
+
+.pipe-table-card {
+  background: var(--white);
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.pipe-table-head {
+  background: var(--navy);
+  color: var(--white);
+  padding: 13px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.pth-title { font-size: 13px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; }
+.pth-meta { font-size: 11px; opacity: 0.7; }
+
+.pipe-table-scroll { max-height: 580px; overflow-y: auto; overflow-x: auto; }
+.pipe-table { width: 100%; border-collapse: collapse; font-size: 11.5px; min-width: 900px; }
+.pipe-table thead th {
+  background: var(--bg); padding: 8px 8px;
+  text-align: left; font-size: 9.5px;
+  text-transform: uppercase; letter-spacing: 1px;
+  font-weight: 700; color: var(--text-muted);
+  border-bottom: 2px solid var(--line);
+  position: sticky; top: 0; z-index: 1;
+}
+.pipe-table thead th.num { text-align: right; }
+.pipe-table tbody td { padding: 6px 8px; border-bottom: 1px solid #F1F1F2; }
+.pipe-table tbody tr:hover td { background: #FAFBFC; }
+.pipe-table .deal-name { font-weight: 700; color: var(--navy); white-space: nowrap; }
+.pipe-table .deal-com { color: var(--text-muted); font-size: 10.5px; }
+.pipe-table .deal-type { font-size: 10px; color: var(--text-muted); font-weight: 600; }
+.pipe-table .deal-num { text-align: right; font-variant-numeric: tabular-nums; }
+.pipe-table .deal-val { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; color: var(--text); }
+.pipe-table .deal-val-strong { color: var(--navy); font-weight: 800; }
+.pipe-table .deal-date { font-size: 10.5px; color: var(--text); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.bucket-pill { display: inline-block; padding: 2px 7px; border-radius: 999px; font-size: 9px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+.bucket-pill.b-hot { background: #FEE2E2; color: #991B1B; }
+.bucket-pill.b-relancer { background: #FEF3C7; color: #92400E; }
+.bucket-pill.b-standby { background: var(--line); color: var(--text-muted); }
+.bucket-pill.b-other { background: #DBEAFE; color: #1E40AF; }
+
+.proba-pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 800; min-width: 36px; text-align: center; color: var(--white); }
+.proba-pill.p-green { background: var(--green-dark); }
+.proba-pill.p-orange { background: var(--orange); }
+.proba-pill.p-yellow { background: #FBBF24; color: #78350F; }
+.proba-pill.p-gray { background: #D1D5DB; color: var(--text-muted); }
+
+/* MÉTHODE box */
+.method-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
+.method-card {
+  background: var(--white);
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  padding: 22px;
+}
+.method-card .mc-title { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--navy); font-weight: 700; margin-bottom: 16px; }
+.method-card .mc-title .mc-badge { background: var(--turquoise); color: var(--navy); padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; letter-spacing: 0.5px; }
+.method-card .mc-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed var(--line); font-size: 13px; }
+.method-card .mc-row:last-of-type { border-bottom: none; }
+.method-card .mc-row .mc-val { font-weight: 700; color: var(--navy); font-variant-numeric: tabular-nums; }
+.method-card .mc-formula { background: var(--bg); border-radius: 8px; padding: 12px 14px; margin-top: 12px; font-size: 12px; line-height: 1.6; }
+.method-card .mc-formula strong { color: var(--navy); }
+.method-card .mc-formula code { background: var(--turquoise-soft); color: var(--navy); padding: 1px 6px; border-radius: 4px; font-weight: 700; font-size: 11px; }
+
+.delay-grid { display: grid; grid-template-columns: 1fr; gap: 7px; margin-top: 8px; }
+.delay-row { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: center; padding: 9px 12px; background: var(--bg); border-radius: 7px; font-size: 12px; border: 1px solid var(--line); }
+.delay-row .dr-tranche { font-weight: 700; color: var(--navy); }
+.delay-row .dr-delai { color: var(--text-muted); font-size: 11px; }
+.delay-row .dr-date { font-weight: 700; color: var(--turquoise-deep); font-variant-numeric: tabular-nums; font-size: 12px; }
+.delay-battery {
+  background: #FEF3C7; color: #92400E;
+  padding: 10px 14px; border-radius: 7px;
+  font-size: 12px; margin-top: 10px;
+  line-height: 1.5;
+}
+.delay-battery strong { color: #78350F; }
+
+/* ============ CA EPC — STORYTELLING REFACTORED ============ */
+.ca-hero {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-soft) 100%);
+  color: var(--white);
+  border-radius: 14px;
+  padding: 24px 28px;
+  margin-bottom: 22px;
+  position: relative;
+  overflow: hidden;
+}
+.ca-hero::after {
+  content: ""; position: absolute;
+  right: -50px; bottom: -50px;
+  width: 180px; height: 180px;
+  background: radial-gradient(circle, var(--turquoise) 0%, transparent 70%);
+  opacity: 0.25;
+}
+.ca-hero .ch-label { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--turquoise); font-weight: 700; margin-bottom: 10px; }
+.ca-hero h2 { font-size: 22px; font-weight: 700; line-height: 1.3; }
+.ca-hero p { font-size: 13px; opacity: 0.85; margin-top: 10px; line-height: 1.5; max-width: 700px; }
+
+.ca-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+.ca-row {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px 22px;
+  display: grid;
+  grid-template-columns: 50px 1fr auto auto;
+  gap: 18px;
+  align-items: center;
+}
+.ca-row .cr-num {
+  width: 38px; height: 38px;
+  border-radius: 9px;
+  color: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 17px;
+}
+.ca-row.b1 .cr-num { background: #1E40AF; }
+.ca-row.b2 .cr-num { background: #065F46; }
+.ca-row.b3 .cr-num { background: #92400E; }
+.ca-row.b4 .cr-num { background: #C2410C; }
+.ca-row.b5 .cr-num { background: #4338CA; }
+.ca-row .cr-content .cr-tag {
+  font-size: 9px; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 1.5px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.ca-row .cr-content .cr-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 2px;
+}
+.ca-row .cr-content .cr-desc {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+.ca-row .cr-amount { text-align: right; }
+.ca-row .cr-amount .cr-val {
+  font-size: 22px;
+  color: var(--navy);
+  font-weight: 800;
+  line-height: 1;
+}
+.ca-row .cr-amount .cr-unit {
+  font-size: 11px; color: var(--text-muted);
+  font-weight: 600; margin-left: 3px;
+}
+.ca-row .cr-share {
+  background: var(--bg); padding: 4px 10px;
+  border-radius: 6px; font-size: 11px;
+  font-weight: 700; color: var(--text-muted);
+}
+.ca-total {
+  background: var(--navy);
+  color: var(--white);
+  border-radius: 12px;
+  padding: 20px 28px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  margin-top: 8px;
+}
+.ca-total .ct-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--turquoise); font-weight: 700; margin-bottom: 4px; }
+.ca-total .ct-title { font-size: 16px; font-weight: 700; }
+.ca-total .ct-amount { font-size: 32px; font-weight: 800; line-height: 1; }
+.ca-total .ct-unit { font-size: 13px; opacity: 0.85; margin-left: 4px; font-weight: 500; }
+
+/* SCENARIOS */
+.scen-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 8px; }
+.scen-card { padding: 22px; border-radius: 14px; color: var(--white); }
+.scen-card.pess { background: linear-gradient(135deg, var(--red) 0%, #8B0000 100%); }
+.scen-card.real { background: linear-gradient(135deg, var(--orange) 0%, #D88029 100%); }
+.scen-card.opt { background: linear-gradient(135deg, var(--green-dark) 0%, #4F7C1F 100%); }
+.scen-card .sl-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; opacity: 0.9; margin-bottom: 6px; }
+.scen-card .sl-hyp { font-size: 11.5px; opacity: 0.85; margin-bottom: 14px; line-height: 1.4; min-height: 32px; }
+.scen-card .sl-val { font-size: 34px; font-weight: 800; line-height: 1; }
+.scen-card .sl-unit { font-size: 14px; font-weight: 500; opacity: 0.85; margin-left: 4px; }
+.scen-card .sl-budget { font-size: 12px; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.25); font-weight: 600; }
+
+/* LARGE SCALE */
+.ls-card { background: var(--white); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-bottom: 14px; }
+.ls-head { background: var(--navy); color: var(--white); padding: 12px 18px; display: grid; grid-template-columns: 1fr 80px 80px 140px 1fr; gap: 14px; font-size: 10.5px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; }
+.ls-head .num { text-align: right; }
+.ls-row { padding: 13px 18px; display: grid; grid-template-columns: 1fr 80px 80px 140px 1fr; gap: 14px; align-items: center; border-bottom: 1px solid #F1F1F2; font-size: 12.5px; }
+.ls-row:last-child { border-bottom: none; }
+.ls-row.total { background: var(--bg); font-weight: 800; color: var(--navy); border-top: 2px solid var(--line); }
+.ls-row.revised { background: #FFF7ED; }
+.ls-row .ls-num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+.ls-row .ls-val { text-align: right; font-weight: 700; color: var(--navy); }
+.ls-row .ls-val .strike { color: var(--text-dim); text-decoration: line-through; font-weight: 500; font-size: 10.5px; display: block; }
+.ls-row .ls-status { font-size: 11px; color: var(--text-muted); }
+.ls-row .ls-status.warning { color: #C2410C; font-weight: 700; }
+.ls-row .badge-rev { background: var(--orange); color: var(--white); padding: 2px 7px; border-radius: 999px; font-size: 8.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-right: 5px; }
+
+@media (max-width: 1100px) {
+  .app { grid-template-columns: 1fr; }
+  .sidebar { position: relative; height: auto; }
+  .perf-row, .deals-row, .pipe-summary, .scen-grid, .method-row { grid-template-columns: 1fr; }
+}
+@media print {
+  .sidebar { display: none; }
+  .app { grid-template-columns: 1fr; }
+  .section { display: block !important; page-break-after: always; }
+  .topbar { page-break-after: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="sb-logo"><img src="data:image/jpeg;base64,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" alt="NEA - New Energy Africa"></div>
+
+    <div class="sb-section">Vue globale</div>
+    <nav class="sb-nav">
+      <a class="active" data-target="performance"><span class="ico">▣</span>Performance</a>
+    </nav>
+
+    <div class="sb-section">Pilotage</div>
+    <nav class="sb-nav">
+      <a data-target="pipeline"><span class="ico">▦</span>Pipeline détaillé</a>
+    </nav>
+
+    <div class="sb-section">Stratégie</div>
+    <nav class="sb-nav">
+      <a data-target="ca-epc"><span class="ico">▤</span>CA EPC 2026</a>
+    </nav>
+
+    <div class="sb-foot">
+      Monthly Report Commercial<br>
+      C&I Madagascar<br>
+      <strong>Avril 2026</strong>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h1 id="page-title">Performance vs Objectifs</h1>
+        <div class="h-sub">Suivi des objectifs M4 — Mai 2026 · Période de référence : Avril 2026</div>
+      </div>
+      <div class="h-meta">
+        <div class="h-badge">M-1 · Avril</div>
+      </div>
+    </div>
+
+    <!-- ====================== PERFORMANCE ====================== -->
+    <section class="section active" id="performance">
+      <div class="s-title">Performances par offre · Objectifs 2026</div>
+
+      <div class="perf-row">
+        <!-- EPC à GAUCHE comme dans le dashboard NEA -->
+        <div class="perf-card">
+          <div class="perf-head">
+            <div>
+              <div class="pc-name">EPC</div>
+              <div class="pc-sub">Vente directe · 12-24 mois maintenance</div>
+            </div>
+            <span class="pc-badge retard">En retard</span>
+          </div>
+          <div class="tiles-row">
+            <div class="tile">
+              <div class="tile-label">Solaire</div>
+              <div class="tile-main">
+                <span class="tm-num">245</span>
+                <span class="tm-obj">/15 000 kWc</span>
+              </div>
+              <div class="tile-sub">1,6% de l'objectif annuel</div>
+            </div>
+            <div class="tile">
+              <div class="tile-label">Stockage</div>
+              <div class="tile-main">
+                <span class="tm-num">489</span>
+                <span class="tm-obj">/12 000 kWh</span>
+              </div>
+              <div class="tile-sub">4,1% de l'objectif annuel</div>
+            </div>
+          </div>
+          <div class="prog-block">
+            <div class="prog-row"><span>Progression solaire (kWc)</span><span><strong>1,6%</strong> · trajectoire 32,9%</span></div>
+            <div class="prog-bar"><div class="fill" style="width: 1.6%;"></div><div class="marker" style="left: 32.9%;"></div></div>
+            <div class="prog-retard">Retard de 4 687 kWc à rattraper</div>
+          </div>
+          <div class="prog-block">
+            <div class="prog-row"><span>Progression stockage (kWh)</span><span><strong>4,1%</strong> · trajectoire 32,9%</span></div>
+            <div class="prog-bar"><div class="fill" style="width: 4.1%;"></div><div class="marker" style="left: 32.9%;"></div></div>
+            <div class="prog-retard">Retard de 3 456 kWh à rattraper</div>
+          </div>
+        </div>
+
+        <!-- PPA / LEASING à DROITE -->
+        <div class="perf-card">
+          <div class="perf-head">
+            <div>
+              <div class="pc-name">PPA / LEASING</div>
+              <div class="pc-sub">Contrat 10-15 ans</div>
+            </div>
+            <span class="pc-badge retard">En retard</span>
+          </div>
+          <div class="tiles-row">
+            <div class="tile">
+              <div class="tile-label">Solaire</div>
+              <div class="tile-main">
+                <span class="tm-num">1 180</span>
+                <span class="tm-obj">/12 000 kWc</span>
+              </div>
+              <div class="tile-sub">9,8% de l'objectif annuel</div>
+            </div>
+            <div class="tile">
+              <div class="tile-label">Stockage</div>
+              <div class="tile-main">
+                <span class="tm-num">882</span>
+                <span class="tm-obj">/12 000 kWh</span>
+              </div>
+              <div class="tile-sub">7,3% de l'objectif annuel</div>
+            </div>
+          </div>
+          <div class="prog-block">
+            <div class="prog-row"><span>Progression solaire (kWc)</span><span><strong>9,8%</strong> · trajectoire 32,9%</span></div>
+            <div class="prog-bar"><div class="fill" style="width: 9.8%;"></div><div class="marker" style="left: 32.9%;"></div></div>
+            <div class="prog-retard">Retard de 2 765 kWc à rattraper</div>
+          </div>
+          <div class="prog-block">
+            <div class="prog-row"><span>Progression stockage (kWh)</span><span><strong>7,3%</strong> · trajectoire 32,9%</span></div>
+            <div class="prog-bar"><div class="fill" style="width: 7.3%;"></div><div class="marker" style="left: 32.9%;"></div></div>
+            <div class="prog-retard">Retard de 3 063 kWh à rattraper</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFFAIRES SIGNÉES + EN COURS - 2 BLOCS comme dashboard -->
+      <div class="s-title">Affaires signées · Cumul YTD à fin avril 2026</div>
+      <div class="deals-row">
+        <div>
+          <div class="deals-card epc">
+            <div class="dc-header">
+              <div class="dc-title"><span class="dc-check">✓</span>EPC · Signé</div>
+              <div class="dc-count">5 deals</div>
+            </div>
+            <div class="deals-list">
+              <div class="dl-head"><div></div><div class="dr-num">kWc</div><div class="dr-num">kWh</div></div>
+              <div class="dl-row"><div class="dr-name">PAM × 2 sites</div><div class="dr-num">30</div><div class="dr-num">60</div></div>
+              <div class="dl-row"><div class="dr-name">CFAO IVANDRY</div><div class="dr-num">—</div><div class="dr-num">40</div></div>
+              <div class="dl-row"><div class="dr-name">CFAO BY PASS</div><div class="dr-num">—</div><div class="dr-num">104</div></div>
+              <div class="dl-row"><div class="dr-name">EPSILON / GREENTEX</div><div class="dr-num">—</div><div class="dr-num">165</div></div>
+              <div class="dl-row"><div class="dr-name">STAR TAMATAVE</div><div class="dr-num">120</div><div class="dr-num">215</div></div>
+              <div class="dl-total"><div>Total signé YTD</div><div class="dr-num">245</div><div class="dr-num">489</div></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="deals-card ppa">
+            <div class="dc-header">
+              <div class="dc-title"><span class="dc-check">✓</span>PPA / LEASING · Signé</div>
+              <div class="dc-count">5 deals</div>
+            </div>
+            <div class="deals-list">
+              <div class="dl-head"><div></div><div class="dr-num">kWc</div><div class="dr-num">kWh</div></div>
+              <div class="dl-row"><div class="dr-name">VIVETIC</div><div class="dr-num">185</div><div class="dr-num">322</div></div>
+              <div class="dl-row"><div class="dr-name">MAX MALAGASY COMPANY</div><div class="dr-num">32</div><div class="dr-num">40</div></div>
+              <div class="dl-row"><div class="dr-name">RIANIS CT MOTORS + TNWF</div><div class="dr-num">367</div><div class="dr-num">416</div></div>
+              <div class="dl-row"><div class="dr-name">BASAN — SOCOLAIT</div><div class="dr-num">—</div><div class="dr-num">546</div></div>
+              <div class="dl-row"><div class="dr-name">STMB LAZAINA</div><div class="dr-num">50</div><div class="dr-num">104</div></div>
+              <div class="dl-total"><div>Total signé YTD</div><div class="dr-num">1 180</div><div class="dr-num">882</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="s-title" style="margin-top: 8px;">En cours de signature · Pipe court terme M+1</div>
+      <div class="deals-row">
+        <div>
+          <div class="deals-card epc cours">
+            <div class="dc-header">
+              <div class="dc-title"><span class="dc-check">○</span>EPC · En signature</div>
+              <div class="dc-count">3 deals</div>
+            </div>
+            <div class="deals-list">
+              <div class="dl-head"><div></div><div class="dr-num">kWc</div><div class="dr-num">kWh</div></div>
+              <div class="dl-row"><div class="dr-name">BEAL Extension</div><div class="dr-num">—</div><div class="dr-num">1 205</div></div>
+              <div class="dl-row"><div class="dr-name">UNIFOODS 1</div><div class="dr-num">200</div><div class="dr-num">—</div></div>
+              <div class="dl-row signed"><div class="dr-name">MAZAVA Extension <span class="pill-signed">Signé 09/05</span></div><div class="dr-num">100</div><div class="dr-num">1 505</div></div>
+              <div class="dl-total"><div>Total en signature</div><div class="dr-num">300</div><div class="dr-num">2 710</div></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="deals-card ppa cours">
+            <div class="dc-header">
+              <div class="dc-title"><span class="dc-check">○</span>PPA / LEASING · En signature</div>
+              <div class="dc-count">8 deals</div>
+            </div>
+            <div class="deals-list">
+              <div class="dl-head"><div></div><div class="dr-num">kWc</div><div class="dr-num">kWh</div></div>
+              <div class="dl-row"><div class="dr-name">SEM — BCP</div><div class="dr-num">1 060</div><div class="dr-num">2 100</div></div>
+              <div class="dl-row"><div class="dr-name">FRCA</div><div class="dr-num">100</div><div class="dr-num">215</div></div>
+              <div class="dl-row"><div class="dr-name">NEOM</div><div class="dr-num">483</div><div class="dr-num">—</div></div>
+              <div class="dl-row"><div class="dr-name">FIMMO — PARK 2</div><div class="dr-num">—</div><div class="dr-num">654</div></div>
+              <div class="dl-row"><div class="dr-name">LOI Extension</div><div class="dr-num">30</div><div class="dr-num">104</div></div>
+              <div class="dl-row"><div class="dr-name">SKYLINE</div><div class="dr-num">2 800</div><div class="dr-num">6 000</div></div>
+              <div class="dl-row signed"><div class="dr-name">DEXTER MAD ILAFY <span class="pill-signed">Signé 06/05</span></div><div class="dr-num">200</div><div class="dr-num">322</div></div>
+              <div class="dl-row signed"><div class="dr-name">ULTRAMAILLE Extension <span class="pill-signed">Signé 09/05</span></div><div class="dr-num">50</div><div class="dr-num">104</div></div>
+              <div class="dl-total"><div>Total en signature</div><div class="dr-num">4 723</div><div class="dr-num">9 499</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================== PIPELINE DÉTAILLÉ ====================== -->
+    <section class="section" id="pipeline">
+      <div class="s-title">Vue d'ensemble du pipe commercial C&I · 239 affaires source PILOTAGE_NEA</div>
+
+      <div class="pipe-summary">
+        <div class="pipe-stat featured">
+          <div class="ps-label">Pipe C&I total — potentiel max</div>
+          <div class="ps-val">126,6<span class="unit">Mds Ar</span></div>
+          <div class="ps-sub">239 affaires (HOT + Relancer + Standby + En cours)</div>
+        </div>
+        <div class="pipe-stat featured-turq">
+          <div class="ps-label">Pipe pondéré 12 mois</div>
+          <div class="ps-val">31,4<span class="unit">Mds Ar</span></div>
+          <div class="ps-sub">Taux transformation moyen 24,8%</div>
+        </div>
+        <div class="pipe-stat">
+          <div class="ps-label">Affaires HOT</div>
+          <div class="ps-val">63<span class="unit">/ 239</span></div>
+          <div class="ps-sub">Pondéré : 23,5 Mds Ar (75% du pipe pondéré)</div>
+        </div>
+        <div class="pipe-stat">
+          <div class="ps-label">À relancer</div>
+          <div class="ps-val">60<span class="unit">/ 239</span></div>
+          <div class="ps-sub">Pondéré : 4,9 Mds Ar — gisement S+1</div>
+        </div>
+      </div>
+
+      <div class="pipe-table-card">
+        <div class="pipe-table-head">
+          <div class="pth-title">Affaires actives · HOT + EN COURS + À RELANCER (127 affaires)</div>
+          <div class="pth-meta">Source : PILOTAGE_NEA 17/05/2026 · Standby/Inactive masqués</div>
+        </div>
+        <div class="pipe-table-scroll">
+          <table class="pipe-table">
+            <thead>
+              <tr>
+                <th>Affaire</th>
+                <th>Commercial</th>
+                <th>Type</th>
+                <th class="num">kWc</th>
+                <th class="num">kWh</th>
+                <th>Statut</th>
+                <th class="num">Proba</th>
+                <th class="num">CA potentiel</th>
+                <th class="num">CA pondéré</th>
+              </tr>
+            </thead>
+            <tbody>
+        <tr>
+          <td class="deal-name">FIMMO PROJET SKYLINE</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">2 800</td>
+          <td class="deal-num">6 000</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">10.20 Mds</td>
+          <td class="deal-val deal-val-strong">4.08 Mds</td>
+        </tr>
+        <tr>
+          <td class="deal-name">TIRUPATI</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">2 000</td>
+          <td class="deal-num">4 000</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">30%</span></td>
+          <td class="deal-val">7.00 Mds</td>
+          <td class="deal-val deal-val-strong">2.10 Mds</td>
+        </tr>
+        <tr>
+          <td class="deal-name">STAR Andranovelona</td>
+          <td class="deal-com">Miantsa</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">800</td>
+          <td class="deal-num">3 200</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">4.40 Mds</td>
+          <td class="deal-val deal-val-strong">1.76 Mds</td>
+        </tr>
+        <tr>
+          <td class="deal-name">OMNIVERDI</td>
+          <td class="deal-com">Nyravo</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">675</td>
+          <td class="deal-num">500</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-green">90%</span></td>
+          <td class="deal-val">1.51 Mds</td>
+          <td class="deal-val deal-val-strong">1.36 Mds</td>
+        </tr>
+        <tr>
+          <td class="deal-name">SEM</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">LEASING</td>
+          <td class="deal-num">1 060</td>
+          <td class="deal-num">2 100</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">30%</span></td>
+          <td class="deal-val">3.69 Mds</td>
+          <td class="deal-val deal-val-strong">1.11 Mds</td>
+        </tr>
+        <tr>
+          <td class="deal-name">HV - ZENITH</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">626</td>
+          <td class="deal-num">1 505</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">2.44 Mds</td>
+          <td class="deal-val deal-val-strong">978 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">HV - SOMACIG</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">750</td>
+          <td class="deal-num">1 290</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">2.42 Mds</td>
+          <td class="deal-val deal-val-strong">966 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">MKLEN</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">700</td>
+          <td class="deal-num">2 000</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">30%</span></td>
+          <td class="deal-val">3.05 Mds</td>
+          <td class="deal-val deal-val-strong">915 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">HV - UNIBISC</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">1 200</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">1.80 Mds</td>
+          <td class="deal-val deal-val-strong">720 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">ACK - ANOSIZATO</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">446</td>
+          <td class="deal-num">1 075</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">1.74 Mds</td>
+          <td class="deal-val deal-val-strong">698 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">FIRST IMMO</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">273</td>
+          <td class="deal-num">430</td>
+          <td><span class="bucket-pill b-other">EN COURS</span></td>
+          <td class="deal-num"><span class="proba-pill p-green">80%</span></td>
+          <td class="deal-val">840 M</td>
+          <td class="deal-val deal-val-strong">672 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">ACK - MAHITSY</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">400</td>
+          <td class="deal-num">1 075</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">1.68 Mds</td>
+          <td class="deal-val deal-val-strong">670 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">HV - PLASCOM</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">400</td>
+          <td class="deal-num">1 075</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">1.68 Mds</td>
+          <td class="deal-val deal-val-strong">670 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">AVITECH - ABATTOIRE</td>
+          <td class="deal-com">Miantsa</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">500</td>
+          <td class="deal-num">860</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">1.61 Mds</td>
+          <td class="deal-val deal-val-strong">644 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">AVITECH - COUVOIR</td>
+          <td class="deal-com">Miantsa</td>
+          <td class="deal-type">PPA/EPC</td>
+          <td class="deal-num">400</td>
+          <td class="deal-num">1 000</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">1.60 Mds</td>
+          <td class="deal-val deal-val-strong">640 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">HV INDUSTRIE UNIPLAST</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">500</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-other">EN COURS</span></td>
+          <td class="deal-num"><span class="proba-pill p-green">80%</span></td>
+          <td class="deal-val">750 M</td>
+          <td class="deal-val deal-val-strong">600 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">HV INDUSTRIE ECOPULP</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">—</td>
+          <td class="deal-num">475</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-other">EN COURS</span></td>
+          <td class="deal-num"><span class="proba-pill p-green">80%</span></td>
+          <td class="deal-val">712 M</td>
+          <td class="deal-val deal-val-strong">570 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">REFRIGEPECHE TANA</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">PPA/EPC</td>
+          <td class="deal-num">290</td>
+          <td class="deal-num">860</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">1.29 Mds</td>
+          <td class="deal-val deal-val-strong">518 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">VITAPLAST</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">1 200</td>
+          <td class="deal-num">3 000</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">4.80 Mds</td>
+          <td class="deal-val deal-val-strong">480 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">BEAL EXTENSION</td>
+          <td class="deal-com">Miantsa</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">1 200</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">1.20 Mds</td>
+          <td class="deal-val deal-val-strong">480 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">SAHANALA / MAINTIRANO</td>
+          <td class="deal-com">Elyse</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">1 040</td>
+          <td class="deal-num">3 060</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">4.62 Mds</td>
+          <td class="deal-val deal-val-strong">462 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">MAZAVA 3</td>
+          <td class="deal-com">Nyravo</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">100</td>
+          <td class="deal-num">1 000</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">1.15 Mds</td>
+          <td class="deal-val deal-val-strong">460 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">AGS</td>
+          <td class="deal-com">Miantsa</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">245</td>
+          <td class="deal-num">645</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">1.01 Mds</td>
+          <td class="deal-val deal-val-strong">405 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">KONECTA</td>
+          <td class="deal-com">Miantsa</td>
+          <td class="deal-type">PPA/EPC</td>
+          <td class="deal-num">240</td>
+          <td class="deal-num">370</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-green">55%</span></td>
+          <td class="deal-val">730 M</td>
+          <td class="deal-val deal-val-strong">402 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">Mazava 2 Batterie</td>
+          <td class="deal-com">Nyravo</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">100</td>
+          <td class="deal-num">1 100</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">30%</span></td>
+          <td class="deal-val">1.25 Mds</td>
+          <td class="deal-val deal-val-strong">375 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">MAZAVA GROUP</td>
+          <td class="deal-com">Nyravo</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">307</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-other">EN COURS</span></td>
+          <td class="deal-num"><span class="proba-pill p-green">80%</span></td>
+          <td class="deal-val">460 M</td>
+          <td class="deal-val deal-val-strong">368 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">EXTENSION ENDUMA</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">604</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">906 M</td>
+          <td class="deal-val deal-val-strong">362 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">LFL</td>
+          <td class="deal-com">Miantsa</td>
+          <td class="deal-type">PPA/EPC</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">900</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">900 M</td>
+          <td class="deal-val deal-val-strong">360 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">SFOI</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">PPA/EPC</td>
+          <td class="deal-num">900</td>
+          <td class="deal-num">1 000</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-yellow">15%</span></td>
+          <td class="deal-val">2.35 Mds</td>
+          <td class="deal-val deal-val-strong">352 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">MINIMAD</td>
+          <td class="deal-com">Nyravo</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">200</td>
+          <td class="deal-num">579</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">879 M</td>
+          <td class="deal-val deal-val-strong">352 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">HV - UNIPLAST</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">550</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">825 M</td>
+          <td class="deal-val deal-val-strong">330 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">BATTERIE WORLDKNIT</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">800</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">800 M</td>
+          <td class="deal-val deal-val-strong">320 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">STAR AMBA. BATTERIE</td>
+          <td class="deal-com">Miantsa</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">2 000</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-yellow">15%</span></td>
+          <td class="deal-val">2.00 Mds</td>
+          <td class="deal-val deal-val-strong">300 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">EPSILON EXT BAT</td>
+          <td class="deal-com">Nyravo</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">645</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">645 M</td>
+          <td class="deal-val deal-val-strong">258 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">DEXTER MAD</td>
+          <td class="deal-com">Elyse</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">204</td>
+          <td class="deal-num">322</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">628 M</td>
+          <td class="deal-val deal-val-strong">251 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">TECHNOPET</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">300</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-green">55%</span></td>
+          <td class="deal-val">450 M</td>
+          <td class="deal-val deal-val-strong">248 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">DYVE GARDEN EXTENSION</td>
+          <td class="deal-com">Miantsa</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">116</td>
+          <td class="deal-num">430</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">604 M</td>
+          <td class="deal-val deal-val-strong">242 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">HV -UNIPRO</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">250</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-green">55%</span></td>
+          <td class="deal-val">375 M</td>
+          <td class="deal-val deal-val-strong">206 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">Refrigepeche</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">PPA/EPC</td>
+          <td class="deal-num">290</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">435 M</td>
+          <td class="deal-val deal-val-strong">174 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">NIVO</td>
+          <td class="deal-com">Nyravo</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">120</td>
+          <td class="deal-num">215</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">395 M</td>
+          <td class="deal-val deal-val-strong">158 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">V GROUP</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">PPA/EPC</td>
+          <td class="deal-num">115</td>
+          <td class="deal-num">215</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">388 M</td>
+          <td class="deal-val deal-val-strong">155 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">SMARTONE</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">150</td>
+          <td class="deal-num">283</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">30%</span></td>
+          <td class="deal-val">508 M</td>
+          <td class="deal-val deal-val-strong">152 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">FOCUS TEXTILE</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">PPA/EPC</td>
+          <td class="deal-num">100</td>
+          <td class="deal-num">215</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">365 M</td>
+          <td class="deal-val deal-val-strong">146 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">SELECT HOTEL</td>
+          <td class="deal-com">Elyse</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">150</td>
+          <td class="deal-num">104</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">329 M</td>
+          <td class="deal-val deal-val-strong">132 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">HV - UNIFOODS 1</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">200</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">300 M</td>
+          <td class="deal-val deal-val-strong">120 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">REGIS GUILLET</td>
+          <td class="deal-com">Miantsa</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">50</td>
+          <td class="deal-num">215</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">290 M</td>
+          <td class="deal-val deal-val-strong">116 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">FESTIVAL</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">450</td>
+          <td class="deal-num">430</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">1.10 Mds</td>
+          <td class="deal-val deal-val-strong">110 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">MADAPET</td>
+          <td class="deal-com">Elyse</td>
+          <td class="deal-type">PPA/EPC</td>
+          <td class="deal-num">300</td>
+          <td class="deal-num">645</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">1.09 Mds</td>
+          <td class="deal-val deal-val-strong">110 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">AQUAFOOD</td>
+          <td class="deal-com">Miantsa</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">300</td>
+          <td class="deal-num">645</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">1.09 Mds</td>
+          <td class="deal-val deal-val-strong">110 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">NEOM BUSINESS PARCK</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">108</td>
+          <td class="deal-num">104</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">266 M</td>
+          <td class="deal-val deal-val-strong">106 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">RELAIS DE LA REINE</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">73</td>
+          <td class="deal-num">154</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">264 M</td>
+          <td class="deal-val deal-val-strong">105 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">SOFREX</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">400</td>
+          <td class="deal-num">430</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">1.03 Mds</td>
+          <td class="deal-val deal-val-strong">103 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">STMB 2 LAZAINA</td>
+          <td class="deal-com">Elyse</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">60</td>
+          <td class="deal-num">150</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">240 M</td>
+          <td class="deal-val deal-val-strong">96 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">AGORA - OLYMPIA</td>
+          <td class="deal-com">Elyse</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">212</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">30%</span></td>
+          <td class="deal-val">318 M</td>
+          <td class="deal-val deal-val-strong">95 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">COFARMA</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">80</td>
+          <td class="deal-num">104</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">224 M</td>
+          <td class="deal-val deal-val-strong">90 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">BMOI MAJ + TAM</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">83</td>
+          <td class="deal-num">157</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">30%</span></td>
+          <td class="deal-val">282 M</td>
+          <td class="deal-val deal-val-strong">84 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">PHILEOL</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">65</td>
+          <td class="deal-num">104</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">202 M</td>
+          <td class="deal-val deal-val-strong">81 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">SCORE TANJOMBATO</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">250</td>
+          <td class="deal-num">430</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">805 M</td>
+          <td class="deal-val deal-val-strong">80 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">BATTERIE SOMACOU</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">800</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">800 M</td>
+          <td class="deal-val deal-val-strong">80 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">SOMAFARA</td>
+          <td class="deal-com">Nyravo</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">500</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">750 M</td>
+          <td class="deal-val deal-val-strong">75 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">ADM VALUE</td>
+          <td class="deal-com">Miantsa</td>
+          <td class="deal-type">PPA/EPC</td>
+          <td class="deal-num">240</td>
+          <td class="deal-num">370</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">730 M</td>
+          <td class="deal-val deal-val-strong">73 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">MNU</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">193</td>
+          <td class="deal-num">430</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">720 M</td>
+          <td class="deal-val deal-val-strong">72 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">VILLA SERTEX</td>
+          <td class="deal-com">Nyravo</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">50</td>
+          <td class="deal-num">100</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">175 M</td>
+          <td class="deal-val deal-val-strong">70 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">DRINKS</td>
+          <td class="deal-com">Miantsa</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">166</td>
+          <td class="deal-num">430</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">679 M</td>
+          <td class="deal-val deal-val-strong">68 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">BATTERIE PILATEX</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">160</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">160 M</td>
+          <td class="deal-val deal-val-strong">64 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">STAR MANAKARA TULEAR</td>
+          <td class="deal-com">Miantsa</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">50</td>
+          <td class="deal-num">80</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">155 M</td>
+          <td class="deal-val deal-val-strong">62 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">SH GLOBAL</td>
+          <td class="deal-com">Miantsa</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">400</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">600 M</td>
+          <td class="deal-val deal-val-strong">60 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">JACARANDRAS</td>
+          <td class="deal-com">Elyse</td>
+          <td class="deal-type">EPC/PPA</td>
+          <td class="deal-num">400</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">600 M</td>
+          <td class="deal-val deal-val-strong">60 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">BGM</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">36</td>
+          <td class="deal-num">90</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">144 M</td>
+          <td class="deal-val deal-val-strong">58 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">HOTEL GUEST</td>
+          <td class="deal-com">Elyse</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">40</td>
+          <td class="deal-num">80</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">140 M</td>
+          <td class="deal-val deal-val-strong">56 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">SOFITRANS</td>
+          <td class="deal-com">Nyravo</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">700</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">5%</span></td>
+          <td class="deal-val">1.05 Mds</td>
+          <td class="deal-val deal-val-strong">52 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">METALLIKIT</td>
+          <td class="deal-com">Elyse</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">150</td>
+          <td class="deal-num">300</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">525 M</td>
+          <td class="deal-val deal-val-strong">52 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">KFC / 2 sites</td>
+          <td class="deal-com">Miantsa</td>
+          <td class="deal-type">EPC/PPA</td>
+          <td class="deal-num">60</td>
+          <td class="deal-num">430</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">520 M</td>
+          <td class="deal-val deal-val-strong">52 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">CONCENTRIX TITAN 2</td>
+          <td class="deal-com">Miantsa</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">50</td>
+          <td class="deal-num">430</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">505 M</td>
+          <td class="deal-val deal-val-strong">50 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">CELTO</td>
+          <td class="deal-com">Elyse</td>
+          <td class="deal-type">PPA/EPC</td>
+          <td class="deal-num">160</td>
+          <td class="deal-num">215</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">455 M</td>
+          <td class="deal-val deal-val-strong">46 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">CARINA TEXTILE</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">PPA/EPC</td>
+          <td class="deal-num">120</td>
+          <td class="deal-num">250</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">430 M</td>
+          <td class="deal-val deal-val-strong">43 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">ACK - AMBODRATRIMO</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">60</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">90 M</td>
+          <td class="deal-val deal-val-strong">36 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">GROUPE DECANT - DMAD</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">95</td>
+          <td class="deal-num">210</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">352 M</td>
+          <td class="deal-val deal-val-strong">35 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">PRINCESS BORA BEACH</td>
+          <td class="deal-com">Nyravo</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">100</td>
+          <td class="deal-num">200</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">350 M</td>
+          <td class="deal-val deal-val-strong">35 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">SACIMEN</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">229</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">344 M</td>
+          <td class="deal-val deal-val-strong">34 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">COLORTEX</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">EPC/PPA</td>
+          <td class="deal-num">140</td>
+          <td class="deal-num">104</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">314 M</td>
+          <td class="deal-val deal-val-strong">31 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">SODIAMA</td>
+          <td class="deal-com">Miantsa</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">100</td>
+          <td class="deal-num">115</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">265 M</td>
+          <td class="deal-val deal-val-strong">26 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">PROMODIM sambava + monrondava+sambilobe+tulear</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">62</td>
+          <td class="deal-num">165</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">258 M</td>
+          <td class="deal-val deal-val-strong">26 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">PLATINIUM</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">PPA/EPC</td>
+          <td class="deal-num">170</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">255 M</td>
+          <td class="deal-val deal-val-strong">26 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">JAY GARMENT</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">90</td>
+          <td class="deal-num">100</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">235 M</td>
+          <td class="deal-val deal-val-strong">24 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">BATTERIE SCRIMAD</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">215</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">215 M</td>
+          <td class="deal-val deal-val-strong">22 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">NUMEN</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">EPC/PPA</td>
+          <td class="deal-num">86</td>
+          <td class="deal-num">79</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">208 M</td>
+          <td class="deal-val deal-val-strong">21 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">AKADIN N</td>
+          <td class="deal-com">Miantsa</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">125</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">188 M</td>
+          <td class="deal-val deal-val-strong">19 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">TELEPERFORMANCE</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">121</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">182 M</td>
+          <td class="deal-val deal-val-strong">18 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">POLYTECH</td>
+          <td class="deal-com">Elyse</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">53</td>
+          <td class="deal-num">100</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">180 M</td>
+          <td class="deal-val deal-val-strong">18 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">S PRIX MEUBLES</td>
+          <td class="deal-com">Elyse</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">50</td>
+          <td class="deal-num">100</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">175 M</td>
+          <td class="deal-val deal-val-strong">18 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">DRAMCO</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">100</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">150 M</td>
+          <td class="deal-val deal-val-strong">15 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">BAOBAB CAFE</td>
+          <td class="deal-com">Miantsa</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">40</td>
+          <td class="deal-num">80</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">140 M</td>
+          <td class="deal-val deal-val-strong">14 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">RAVINALA NOSYBE EXTENSION</td>
+          <td class="deal-com">Nyravo</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">104</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">104 M</td>
+          <td class="deal-val deal-val-strong">10 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">BATTERIE CTHT</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">104</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">104 M</td>
+          <td class="deal-val deal-val-strong">10 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">DUNE D'IFATY EXTENSION</td>
+          <td class="deal-com">Elyse</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">25</td>
+          <td class="deal-num">50</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">88 M</td>
+          <td class="deal-val deal-val-strong">9 M</td>
+        </tr>
+        <tr>
+          <td class="deal-name">REFRIGEPECHE TAMATAVE</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">PPA/EPC</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">HOPITAL SAMBAVA * MAZAVA</td>
+          <td class="deal-com">Nyravo</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">ORANGEA NOSYBE</td>
+          <td class="deal-com">Elyse</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">AXELLE TEXTILE</td>
+          <td class="deal-com">Elyse</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">TANAMERA</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">E TOILE</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">HV - SOBOMA</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">LEADER PRICE (MORIZE VAL)</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">—</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">PNUD</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">—</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">Hopital Sambava</td>
+          <td class="deal-com">Elysé</td>
+          <td class="deal-type">EPC</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">Batterie Wordknit</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">PPA</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">HAZOVATO</td>
+          <td class="deal-com">Miantsa</td>
+          <td class="deal-type">—</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">ACTIVO/ARBIOCHEM</td>
+          <td class="deal-com">Miantsa</td>
+          <td class="deal-type">—</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-green">100%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">VGROUP</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">—</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">APC MINING TAMATAVE</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">—</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">VILLA DG THALYS</td>
+          <td class="deal-com">Nyravo</td>
+          <td class="deal-type">—</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">BCP TANJOMBATO</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">—</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">ARO BAOBAB</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">—</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">ETOILE</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">—</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">HOTEL RAMENA 3</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">—</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">DRYM</td>
+          <td class="deal-com">Nyravo</td>
+          <td class="deal-type">—</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">TRIMETA ORCHIDEX TAMATAVE</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">—</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">TRIMETA TRIBECA</td>
+          <td class="deal-com">Estelah</td>
+          <td class="deal-type">—</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">HV INDUSTRIE UNIFOODS 1</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">—</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">HV INDUSTRIE UNIFOODS 2</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">—</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">HV INDUSTRIE ZIAM</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">—</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">HV INDUSTRIE SOMACIG</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">—</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">HV INDUSTRIE PLASCOM</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">—</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">HV INDUSTRIE UNIBISC</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">—</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-hot">HOT</span></td>
+          <td class="deal-num"><span class="proba-pill p-orange">40%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">HV INDUSTRIE STORM</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">—</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+        <tr>
+          <td class="deal-name">HV INDUSTRIE UNIPRO SAVONNERIE</td>
+          <td class="deal-com">Iriantsoa</td>
+          <td class="deal-type">—</td>
+          <td class="deal-num">—</td>
+          <td class="deal-num">—</td>
+          <td><span class="bucket-pill b-relancer">A RELANCER</span></td>
+          <td class="deal-num"><span class="proba-pill p-gray">10%</span></td>
+          <td class="deal-val">—</td>
+          <td class="deal-val deal-val-strong">—</td>
+        </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- BLOC RATIOS + DATE LIMITE -->
+      <div class="s-title" style="margin-top: 28px;">Méthode de calcul · Ratios prix unitaires & règle date limite signature</div>
+
+      <div class="method-row">
+        <div class="method-card">
+          <div class="mc-title"><span class="mc-badge">1 / 2</span>Ratios prix unitaires de référence</div>
+          <div class="mc-row">
+            <span>Prix solaire (kWc installé)</span>
+            <span class="mc-val">1 500 000 Ar HT / kWc</span>
+          </div>
+          <div class="mc-row">
+            <span>Prix stockage (kWh installé)</span>
+            <span class="mc-val">1 000 000 Ar HT / kWh</span>
+          </div>
+          <div class="mc-row">
+            <span>Référence taux change</span>
+            <span class="mc-val">~4 900 Ar / EUR</span>
+          </div>
+          <div class="mc-row">
+            <span>Ratio Large Scale vs C&I</span>
+            <span class="mc-val">0,85 (-15% volume)</span>
+          </div>
+          <div class="mc-formula">
+            <strong>CA potentiel</strong> = <code>kWc × 1 500 000</code> + <code>kWh × 1 000 000</code><br>
+            <strong>CA pondéré</strong> = <code>CA potentiel × probabilité signature</code>
+          </div>
+        </div>
+
+        <div class="method-card">
+          <div class="mc-title"><span class="mc-badge">2 / 2</span>Règle date limite signature pour CA 2026</div>
+          <div style="font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;">
+            Pour qu'une affaire génère du CA en 2026, la signature doit intervenir suffisamment tôt pour que les travaux soient bouclés avant le <strong style="color: var(--navy);">31/12/2026</strong>. Au-delà, le CA bascule en 2027.
+          </div>
+
+          <div class="delay-grid">
+            <div class="delay-row">
+              <span class="dr-tranche">&lt; 500 kWc</span>
+              <span class="dr-delai">4 mois travaux</span>
+              <span class="dr-date">31/08/2026</span>
+            </div>
+            <div class="delay-row">
+              <span class="dr-tranche">500 — 1 200 kWc</span>
+              <span class="dr-delai">7 mois travaux</span>
+              <span class="dr-date">31/05/2026</span>
+            </div>
+            <div class="delay-row">
+              <span class="dr-tranche">&gt; 1 200 kWc</span>
+              <span class="dr-delai">9 mois travaux</span>
+              <span class="dr-date">31/03/2026</span>
+            </div>
+          </div>
+
+          <div class="delay-battery">
+            <strong>Surcharge batterie</strong> : pour toute affaire avec stockage ≥ 100 kWh, ajouter <strong>+ 6 mois</strong> en parallèle (importation cellules pendant l'étude/chantier).
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================== CA EPC 2026 ====================== -->
+    <section class="section" id="ca-epc">
+      <div class="ca-hero">
+        <div class="ch-label">Focus stratégique · Mai 2026</div>
+        <h2>Quel atterrissage CA EPC 2026 ?</h2>
+        <p>Le Budget V0 (fixé fin 2025) tablait sur <strong style="color: var(--turquoise);">75 Mds Ar</strong>. Avec les données actualisées Compta + Pipeline, voici la projection consolidée en 5 composantes.</p>
+      </div>
+
+      <div class="s-title">5 composantes de la projection EPC NET 2026 (hors Large Scale)</div>
+
+      <div class="ca-grid">
+        <div class="ca-row b1">
+          <div class="cr-num">1</div>
+          <div class="cr-content">
+            <div class="cr-tag">Déjà acquis · Comptabilité</div>
+            <div class="cr-title">CA reporté travaux 2025</div>
+            <div class="cr-desc">YTD facturé 2026 + reliquat travaux 2025 sécurisé sur l'exercice</div>
+          </div>
+          <div class="cr-amount">
+            <div class="cr-val">11,2<span class="cr-unit">Mds Ar</span></div>
+          </div>
+          <div class="cr-share">26%</div>
+        </div>
+
+        <div class="ca-row b2">
+          <div class="cr-num">2</div>
+          <div class="cr-content">
+            <div class="cr-tag">En exécution 2026</div>
+            <div class="cr-title">Travaux en cours 2026</div>
+            <div class="cr-desc">Affaires en chantier dont CA généré sur 2026 — suivi opérationnel</div>
+          </div>
+          <div class="cr-amount">
+            <div class="cr-val">8,2<span class="cr-unit">Mds Ar</span></div>
+          </div>
+          <div class="cr-share">19%</div>
+        </div>
+
+        <div class="ca-row b3">
+          <div class="cr-num">3</div>
+          <div class="cr-content">
+            <div class="cr-tag">Signé · Attente travaux</div>
+            <div class="cr-title">Affaires signées en attente</div>
+            <div class="cr-desc">Contrats signés non démarrés — CA 2026 ou décalage 2027</div>
+          </div>
+          <div class="cr-amount">
+            <div class="cr-val">5,6<span class="cr-unit">Mds Ar</span></div>
+          </div>
+          <div class="cr-share">13%</div>
+        </div>
+
+        <div class="ca-row b4">
+          <div class="cr-num">4</div>
+          <div class="cr-content">
+            <div class="cr-tag">En cours de signature</div>
+            <div class="cr-title">Affaires en signature (court terme)</div>
+            <div class="cr-desc">SKYLINE, BEAL Ext, UNIFOODS, FIMMO Park 2, etc.</div>
+          </div>
+          <div class="cr-amount">
+            <div class="cr-val">9,0<span class="cr-unit">Mds Ar</span></div>
+          </div>
+          <div class="cr-share">21%</div>
+        </div>
+
+        <div class="ca-row b5">
+          <div class="cr-num">5</div>
+          <div class="cr-content">
+            <div class="cr-tag">Pipeline pondéré · À transformer</div>
+            <div class="cr-title">Pipeline EPC pondéré (58 affaires)</div>
+            <div class="cr-desc">CA potentiel × probabilité — top : UNIPLAST 90% (742,5 M Ar)</div>
+          </div>
+          <div class="cr-amount">
+            <div class="cr-val">8,4<span class="cr-unit">Mds Ar</span></div>
+          </div>
+          <div class="cr-share">20%</div>
+        </div>
+
+        <div class="ca-total">
+          <div>
+            <div class="ct-label">→ Projection EPC NET (hors Large Scale)</div>
+            <div class="ct-title">5 composantes consolidées</div>
+          </div>
+          <div class="ct-amount">42,5<span class="ct-unit">Mds Ar</span></div>
+        </div>
+      </div>
+
+      <!-- LARGE SCALE -->
+      <div class="s-title" style="margin-top: 28px;">Large Scale · Potentiel séparé (3 projets distincts du pipe C&I)</div>
+
+      <div class="ls-card">
+        <div class="ls-head">
+          <div>Projet</div>
+          <div class="num">kWc</div>
+          <div class="num">kWh</div>
+          <div class="num">Valeur révisée</div>
+          <div>Statut</div>
+        </div>
+        <div class="ls-row revised">
+          <div><strong>Ambato Extension (Phase 2)</strong></div>
+          <div class="ls-num">15 000</div>
+          <div class="ls-num">40 000</div>
+          <div class="ls-val">
+            22,50 Mds Ar
+            <span class="strike">~53,12 Mds (initial)</span>
+          </div>
+          <div class="ls-status warning">
+            <span class="badge-rev">Révisé</span>Panneaux + onduleurs sortis du scope (-50% solaire) · batterie : prestation + GC uniquement
+          </div>
+        </div>
+        <div class="ls-row">
+          <div><strong>SAVA / MENABE Extension</strong></div>
+          <div class="ls-num">5 000</div>
+          <div class="ls-num">14 000</div>
+          <div class="ls-val">18,27 Mds Ar</div>
+          <div class="ls-status">En attente arbitrage</div>
+        </div>
+        <div class="ls-row">
+          <div><strong>Tozzi Green</strong></div>
+          <div class="ls-num">5 000</div>
+          <div class="ls-num">10 000</div>
+          <div class="ls-val">14,88 Mds Ar</div>
+          <div class="ls-status">Potentiel C&I</div>
+        </div>
+        <div class="ls-row total">
+          <div>TOTAL LARGE SCALE (potentiel max révisé)</div>
+          <div class="ls-num">25 000</div>
+          <div class="ls-num">64 000</div>
+          <div class="ls-val" style="font-size: 15px;">55,65 Mds Ar</div>
+          <div class="ls-status" style="font-weight: 700;">À phaser 2026 / 2027+</div>
+        </div>
+      </div>
+
+      <!-- 3 SCENARIOS -->
+      <div class="s-title" style="margin-top: 24px;">3 scénarios consolidés · vs Budget V0 (75 Mds Ar)</div>
+
+      <div class="scen-grid">
+        <div class="scen-card pess">
+          <div class="sl-label">Pessimiste</div>
+          <div class="sl-hyp">Large Scale 0% en 2026 (report intégral 2027+)</div>
+          <div class="sl-val">42,5<span class="sl-unit">Mds Ar</span></div>
+          <div class="sl-budget">57% du Budget V0</div>
+        </div>
+        <div class="scen-card real">
+          <div class="sl-label">Réaliste</div>
+          <div class="sl-hyp">Large Scale 20% en 2026 (démarrage partiel)</div>
+          <div class="sl-val">53,6<span class="sl-unit">Mds Ar</span></div>
+          <div class="sl-budget">72% du Budget V0</div>
+        </div>
+        <div class="scen-card opt">
+          <div class="sl-label">Optimiste</div>
+          <div class="sl-hyp">Large Scale 40% en 2026 (démarrage accéléré)</div>
+          <div class="sl-val">64,8<span class="sl-unit">Mds Ar</span></div>
+          <div class="sl-budget">86% du Budget V0</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+const links = document.querySelectorAll('.sb-nav a');
+const sections = document.querySelectorAll('.section');
+const title = document.getElementById('page-title');
+const titles = {
+  performance: 'Performance vs Objectifs',
+  pipeline: 'Pipeline EPC détaillé',
+  'ca-epc': 'CA EPC 2026 · Consolidation'
+};
+links.forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const target = link.dataset.target;
+    links.forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+    sections.forEach(s => s.classList.remove('active'));
+    document.getElementById(target).classList.add('active');
+    title.textContent = titles[target];
+    window.scrollTo(0, 0);
+  });
+});
+</script>
+</body>
+</html>
